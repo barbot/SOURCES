@@ -8,14 +8,7 @@ package editor.domain.io;
 
 import editor.domain.Edge;
 import editor.domain.Node;
-import editor.domain.elements.ColorClass;
-import editor.domain.elements.ColorVar;
-import editor.domain.elements.ConstantID;
-import editor.domain.elements.GspnEdge;
-import editor.domain.elements.GspnPage;
-import editor.domain.elements.Place;
-import editor.domain.elements.TemplateVariable;
-import editor.domain.elements.Transition;
+import editor.domain.elements.*;
 import editor.domain.elements.Transition.Type;
 import editor.domain.grammar.EvaluationArguments;
 import editor.domain.grammar.EvaluationException;
@@ -74,45 +67,70 @@ public class GRMLFormat {
             // Declared color classes
             for (Node node : gspn.nodes) {
                 if (node instanceof ColorClass) {
-                    ColorClass cc = (ColorClass)node;
+                    ColorClass cc = (ColorClass) node;
                     if (cc.isSimpleClass()) {
                         grml.println("<attribute name=\"classDeclaration\">");
-                        grml.println("\t<attribute name=\"name\">"+cc.getUniqueName()+"</attribute>");
+                        grml.println("\t<attribute name=\"name\">" + cc.getUniqueName() + "</attribute>");
                         // Write the enumerated colors
                         grml.println("\t<attribute name=\"classType\">");
                         grml.println("\t<attribute name=\"classEnum\">");
                         int numColors = cc.numColors();
-                        for (int i=0; i<numColors; i++) {
+                        for (int i = 0; i < numColors; i++) {
                             String clrName = cc.getColorName(i);
-                            grml.println("\t\t<attribute name=\"enumValue\">"+clrName+"</attribute>");
+                            grml.println("\t\t<attribute name=\"enumValue\">" + clrName + "</attribute>");
                         }
                         grml.println("\t</attribute>"); // classEnum
                         grml.println("\t</attribute>"); // classType
                         // Write circular property
-                        if (cc.isSimpleClass()) 
-                            grml.println("\t<attribute name=\"circular\">"+(cc.isCircular() ? "true" : "false")+"</attribute>");
+                        if (cc.isSimpleClass())
+                            grml.println("\t<attribute name=\"circular\">" + (cc.isCircular() ? "true" : "false") + "</attribute>");
+
+
+                        if (!cc.isSimpleClass() || cc.numSubClasses() <=1)
+                            continue;
+
+                        for (int i = 0; i < cc.numSubClasses(); i++) {
+                            ParsedColorSubclass pcs = cc.getSubclass(i);
+                            grml.println("\t<attribute name=\"staticSubclassDeclaration\">");
+                            grml.print("\t\t<attribute name=\"name\">");
+                            grml.print(pcs.name);
+                            grml.println("</attribute>");
+
+
+                            if (pcs.isInterval())
+                                for(int j= Integer.parseInt(pcs.getStartRangeExpr()); j<Integer.parseInt(pcs.getEndRangeExpr()); j++ ){
+                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getIntervalPrefix()+ j + "</attribute>");
+                                }
+                            else {
+                                for (int j = 0; j < pcs.getNumColors(); j++)
+                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getColorName(j)+ "</attribute>");
+                            }
+                            grml.println("\t</attribute>"); //static subclass declaration
+
+                        }
+
                         grml.println("</attribute>"); // classDeclaration
-                    }
-                    else { // domain class
+                    } else { // domain class
                         grml.println("<attribute name=\"domainDeclaration\">");
-                        grml.println("\t<attribute name=\"name\">"+cc.getUniqueName()+"</attribute>");
+                        grml.println("\t<attribute name=\"name\">" + cc.getUniqueName() + "</attribute>");
                         // Write the enumerated colors
                         grml.println("\t<attribute name=\"domainType\">");
                         grml.println("\t<attribute name=\"cartesianProduct\">");
-                        for (int i=0; i<cc.getNumClassesInDomain(); i++) {
+                        for (int i = 0; i < cc.getNumClassesInDomain(); i++) {
                             String clsName = cc.getColorClassName(i);
-                            grml.println("\t\t<attribute name=\"type\">"+clsName+"</attribute>");
+                            grml.println("\t\t<attribute name=\"type\">" + clsName + "</attribute>");
                         }
                         grml.println("\t</attribute>"); // cartesianProduct
                         grml.println("\t</attribute>"); // domainType
                         // Write circular property
-                        if (cc.isSimpleClass()) 
-                            grml.println("\t<attribute name=\"circular\">"+(cc.isCircular() ? "true" : "false")+"</attribute>");
+                        if (cc.isSimpleClass())
+                            grml.println("\t<attribute name=\"circular\">" + (cc.isCircular() ? "true" : "false") + "</attribute>");
                         grml.println("</attribute>"); // domainDeclaration
-                        
+
                     }
                 }
             }
+
             // Declared Color variables
             for (Node node : gspn.nodes) {
                 if (node instanceof ColorVar) {

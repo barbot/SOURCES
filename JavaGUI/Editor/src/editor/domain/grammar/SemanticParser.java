@@ -456,6 +456,9 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
         new BinaryFunct(false, ExprLangParser.LESS_EQ, " <= ", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.GREATER, " > ", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.GREATER_EQ, " >= ", OperatorPos.FUNCTION),
+
+        new BinaryFunct(false, ExprLangParser.CONTAINS, "<attribute name=\"in\">"," ","</attribute>", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.DONT_CONTAINS,"<attribute name=\"notint\">"," ","</attribute>", OperatorPos.FUNCTION),
         // General event PDF functions
 //        new BinaryFunct(true, ExprLangParser.RECT_FN, "R[", ", ", "]", OperatorPos.FUNCTION),
         new BinaryFunct(true, ExprLangParser.UNIFORM_FN, 
@@ -1389,6 +1392,9 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                     case LATEX:
                         altId = AlternateNameFunction.NUMBERS_AS_SUBSCRIPTS
                                     .prepareLatexText(id, null, NetObject.STYLE_ROMAN);
+                        break;
+                    case GRML:
+                        altId = "<attribute name=\"name\">" +id+"</attribute>";
                         break;
                     case PNML:
                         throw new UnsupportedOperationException("Static subclasses are not supporeted in PNML.");
