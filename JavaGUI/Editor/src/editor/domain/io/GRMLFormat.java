@@ -91,14 +91,14 @@ public class GRMLFormat {
 
                         for (int i = 0; i < cc.numSubClasses(); i++) {
                             ParsedColorSubclass pcs = cc.getSubclass(i);
-                            grml.println("\t<attribute name=\"staticSubclassDeclaration\">");
+                            grml.println("\t<attribute name=\"staticSubclass\">");
                             grml.print("\t\t<attribute name=\"name\">");
                             grml.print(pcs.name);
                             grml.println("</attribute>");
 
 
                             if (pcs.isInterval())
-                                for(int j= Integer.parseInt(pcs.getStartRangeExpr()); j<Integer.parseInt(pcs.getEndRangeExpr()); j++ ){
+                                for(int j= Integer.parseInt(pcs.getStartRangeExpr()); j<=Integer.parseInt(pcs.getEndRangeExpr()); j++ ){
                                     grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getIntervalPrefix()+ j + "</attribute>");
                                 }
                             else {
