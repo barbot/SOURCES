@@ -1394,7 +1394,10 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                                     .prepareLatexText(id, null, NetObject.STYLE_ROMAN);
                         break;
                     case GRML:
-                        altId = "<attribute name=\"name\">" +id+"</attribute>";
+                        altId = "<attribute name=\"intConst\">\n";
+                        altId += "<attribute name=\"type\">" +cc.getUniqueName() +"</attribute>\n";
+                        altId += "<attribute name=\"name\">" +id+"</attribute>\n";
+                        altId += "</attribute>\n";
                         break;
                     case PNML:
                         throw new UnsupportedOperationException("Static subclasses are not supporeted in PNML.");

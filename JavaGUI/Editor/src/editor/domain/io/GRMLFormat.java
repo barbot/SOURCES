@@ -65,28 +65,27 @@ public class GRMLFormat {
             grml.println("<model id=\"1\" formalismUrl=\""+formalUrl+"\" xmlns=\"http://cosyverif.org/ns/model\">");
             grml.println("<attribute name=\"declaration\">");
             // Declared color classes
-            for (Node node : gspn.nodes) {
-                if (node instanceof ColorClass) {
-                    ColorClass cc = (ColorClass) node;
-                    if (cc.isSimpleClass()) {
-                        grml.println("<attribute name=\"classDeclaration\">");
-                        grml.println("\t<attribute name=\"name\">" + cc.getUniqueName() + "</attribute>");
-                        // Write the enumerated colors
-                        grml.println("\t<attribute name=\"classType\">");
-                        grml.println("\t<attribute name=\"classEnum\">");
-                        int numColors = cc.numColors();
-                        for (int i = 0; i < numColors; i++) {
-                            String clrName = cc.getColorName(i);
-                            grml.println("\t\t<attribute name=\"enumValue\">" + clrName + "</attribute>");
-                        }
-                        grml.println("\t</attribute>"); // classEnum
-                        grml.println("\t</attribute>"); // classType
-                        // Write circular property
-                        if (cc.isSimpleClass())
-                            grml.println("\t<attribute name=\"circular\">" + (cc.isCircular() ? "true" : "false") + "</attribute>");
+            for (Node node : gspn.nodes)if (node instanceof ColorClass) {
+                ColorClass cc = (ColorClass) node;
+                if (cc.isSimpleClass()) {
+                    grml.println("<attribute name=\"classDeclaration\">");
+                    grml.println("\t<attribute name=\"name\">" + cc.getUniqueName() + "</attribute>");
+                    // Write the enumerated colors
+                    grml.println("\t<attribute name=\"classType\">");
+                    grml.println("\t<attribute name=\"classEnum\">");
+                    int numColors = cc.numColors();
+                    for (int i = 0; i < numColors; i++) {
+                        String clrName = cc.getColorName(i);
+                        grml.println("\t\t<attribute name=\"enumValue\">" + clrName + "</attribute>");
+                    }
+                    grml.println("\t</attribute>"); // classEnum
+                    grml.println("\t</attribute>"); // classType
+                    // Write circular property
+                    if (cc.isSimpleClass())
+                        grml.println("\t<attribute name=\"circular\">" + (cc.isCircular() ? "true" : "false") + "</attribute>");
 
 
-                        if (cc.isSimpleClass() && ! (cc.numSubClasses() <=1)){
+                    if (cc.isSimpleClass() && !(cc.numSubClasses() <= 1)) {
 
                         for (int i = 0; i < cc.numSubClasses(); i++) {
                             ParsedColorSubclass pcs = cc.getSubclass(i);
@@ -97,20 +96,24 @@ public class GRMLFormat {
 
 
                             if (pcs.isInterval())
-                                for(int j= Integer.parseInt(pcs.getStartRangeExpr()); j<=Integer.parseInt(pcs.getEndRangeExpr()); j++ ){
-                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getIntervalPrefix()+ j + "</attribute>");
+                                for (int j = Integer.parseInt(pcs.getStartRangeExpr()); j <= Integer.parseInt(pcs.getEndRangeExpr()); j++) {
+                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getIntervalPrefix() + j + "</attribute>");
                                 }
                             else {
                                 for (int j = 0; j < pcs.getNumColors(); j++)
-                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getColorName(j)+ "</attribute>");
+                                    grml.println("\t\t<attribute name=\"enumValue\">" + pcs.getColorName(j) + "</attribute>");
                             }
                             grml.println("\t</attribute>"); //static subclass declaration
 
                         }
-                        }
+                    }
 
-                        grml.println("</attribute>"); // classDeclaration
-                    } else { // domain class
+                    grml.println("</attribute>"); // classDeclaration
+                }
+            }
+            for (Node node : gspn.nodes)if (node instanceof ColorClass) {
+                ColorClass cc = (ColorClass) node;
+                if (!cc.isSimpleClass()) { // domain class
                         grml.println("<attribute name=\"domainDeclaration\">");
                         grml.println("\t<attribute name=\"name\">" + cc.getUniqueName() + "</attribute>");
                         // Write the enumerated colors
@@ -129,7 +132,6 @@ public class GRMLFormat {
 
                     }
                 }
-            }
 
             // Declared Color variables
             for (Node node : gspn.nodes) {
