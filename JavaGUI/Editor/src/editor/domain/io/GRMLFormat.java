@@ -86,8 +86,7 @@ public class GRMLFormat {
                             grml.println("\t<attribute name=\"circular\">" + (cc.isCircular() ? "true" : "false") + "</attribute>");
 
 
-                        if (!cc.isSimpleClass() || cc.numSubClasses() <=1)
-                            continue;
+                        if (cc.isSimpleClass() && ! (cc.numSubClasses() <=1)){
 
                         for (int i = 0; i < cc.numSubClasses(); i++) {
                             ParsedColorSubclass pcs = cc.getSubclass(i);
@@ -107,6 +106,7 @@ public class GRMLFormat {
                             }
                             grml.println("\t</attribute>"); //static subclass declaration
 
+                        }
                         }
 
                         grml.println("</attribute>"); // classDeclaration

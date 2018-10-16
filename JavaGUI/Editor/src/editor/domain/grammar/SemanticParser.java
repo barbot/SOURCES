@@ -452,10 +452,10 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
 //        new BinaryFunct(false, ExprLangParser.BIIMPLY, " <-> ", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.EQUAL, "<attribute name=\"equal\">"," ","</attribute>", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.NOT_EQUAL, "<attribute name=\"notEqual\">"," ","</attribute>", OperatorPos.FUNCTION),
-        new BinaryFunct(false, ExprLangParser.LESS, " < ", OperatorPos.FUNCTION),
-        new BinaryFunct(false, ExprLangParser.LESS_EQ, " <= ", OperatorPos.FUNCTION),
-        new BinaryFunct(false, ExprLangParser.GREATER, " > ", OperatorPos.FUNCTION),
-        new BinaryFunct(false, ExprLangParser.GREATER_EQ, " >= ", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.LESS, "<attribute name=\"stless\">"," ","</attribute>", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.LESS_EQ, "<attribute name=\"lesseq\">"," ","</attribute>", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.GREATER, "<attribute name=\"stmore\">"," ","</attribute>", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.GREATER_EQ, "<attribute name=\"moreeq\">"," ","</attribute>", OperatorPos.FUNCTION),
 
         new BinaryFunct(false, ExprLangParser.CONTAINS, "<attribute name=\"in\">"," ","</attribute>", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.DONT_CONTAINS,"<attribute name=\"notint\">"," ","</attribute>", OperatorPos.FUNCTION),
@@ -1611,9 +1611,10 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                         }
                         break;
                     case GRML:
-                        clrId = "<attribute name=\"expr\"><attribute name=\"enumConst\"><attribute name=\"type\">"+
-                                cc.getUniqueName()+"</attribute><attribute name=\"enumValue\">"+id+
-                                "</attribute></attribute></attribute>";
+                        clrId = "<attribute name=\"intConst\">\n" +
+                                "<attribute name=\"type\">"+cc.getUniqueName()+"</attribute>\n" +
+                                "<attribute name=\"name\">"+id+"</attribute>\n" +
+                                "</attribute>\n";
                         break;
                     default:
                         throw new UnsupportedOperationException();
@@ -1745,13 +1746,13 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                 buffer.append("<tuple>");
                 break;
             case GRML:
-                buffer.append("<attribute name=\"token\">");
-                buffer.append("<attribute name=\"occurs\">");
+                buffer.append("<attribute name=\"token\">\n");
+                buffer.append("<attribute name=\"occurs\">\n");
                 if (mult != null) 
                     buffer.append(visit(mult).getFormula());
                 else
-                    buffer.append("<attribute name=\"intValue\">1</attribute>");
-                buffer.append("</attribute><attribute name=\"tokenProfile\">");
+                    buffer.append("<attribute name=\"intValue\">1</attribute>\n");
+                buffer.append("</attribute>\n<attribute name=\"tokenProfile\">\n");
                 break;
             default:
                 throw new UnsupportedOperationException("visitMultiSetDef");
@@ -1822,7 +1823,7 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                     subterm = subterm.replaceAll("ALL_TERM", 
                                 "<attribute name=\"function\"><attribute name=\"all\"><attribute name=\"type\">"+
                                 expectedClass.getUniqueName()+"</attribute></attribute></attribute>");
-                    buffer.append("<attribute name=\"expr\">").append(subterm).append("</attribute>");
+                    buffer.append("<attribute name=\"expr\">\n").append(subterm).append("</attribute>\n");
                     }
                     break;
                 default:
@@ -1841,7 +1842,7 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                     buffer.append("</subterm></numberof>");
                 break;
             case GRML:
-                buffer.append("</attribute></attribute>"); // tokenProfile, token
+                buffer.append("</attribute>\n</attribute>\n"); // tokenProfile, token
                 break;
             default:
                 throw new UnsupportedOperationException();
