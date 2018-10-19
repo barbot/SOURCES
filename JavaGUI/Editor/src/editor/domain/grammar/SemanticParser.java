@@ -1614,7 +1614,7 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                         }
                         break;
                     case GRML:
-                        clrId = "<attribute name=\"intConst\">\n" +
+                        clrId = "<attribute name=\"colorConst\">\n" +
                                 "<attribute name=\"type\">"+cc.getUniqueName()+"</attribute>\n" +
                                 "<attribute name=\"name\">"+id+"</attribute>\n" +
                                 "</attribute>\n";
