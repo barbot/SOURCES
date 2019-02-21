@@ -10,7 +10,7 @@ import editor.domain.LabelDecor;
 import editor.domain.NetObject;
 import static editor.domain.NetObject.isAlphanumericIdentifier;
 import editor.domain.Node;
-import editor.domain.elements.ColorClass;
+import editor.domain.elements.*;
 import editor.domain.elements.ColorVar;
 import editor.domain.elements.ConstantID;
 import editor.domain.elements.GspnEdge;
@@ -159,6 +159,7 @@ public class PNMLFormat {
                                 pnml.println("\t\t\t\t\t\t<finiteintrange "
                                         + "start=\""+cc.getSubclass(0).getStartRangeExpr()+"\" "
                                         + "end=\""+cc.getSubclass(0).getEndRangeExpr()+"\"/>");
+                                pnml.println("\t\t\t\t\t</namedsort>");
                             }
                             else {
                                 // Write a <*enumeration>
@@ -168,9 +169,35 @@ public class PNMLFormat {
                                 int numColors = cc.numColors();
                                 for (int i=0; i<numColors; i++) {
                                     String clrName = escapeXml(cc.getColorName(i));
-                                    pnml.println("\t\t\t\t\t\t\t<feconstant id=\""+clrName+"\" name=\""+clrName+"\"/>");
+                                    pnml.println("\t\t\t\t\t\t\t<feconstant id=\"" + clrName + "\" name=\"" + clrName + "\"/>");
                                 }
                                 pnml.println("\t\t\t\t\t\t</"+enumType+">");
+                                pnml.println("\t\t\t\t\t</namedsort>");
+
+                                if (cc.isSimpleClass() && !(cc.numSubClasses() <= 1)) {
+                                    pnml.println("\t\t\t\t\t<partition id=\""+ccName+"partition\" name=\""+ccName+"Partition\">");
+                                    pnml.println("\t\t\t\t\t\t<usersort declaration=\""+ ccName +"\"/>");
+
+                                    for (int i = 0; i < cc.numSubClasses(); i++) {
+                                        ParsedColorSubclass pcs = cc.getSubclass(i);
+
+                                        pnml.println("\t\t\t\t\t\t<partitionelement id=\""+pcs.name+"\" name=\""+pcs.name+"\">");
+
+
+                                        if (pcs.isInterval())
+                                            for (int j = Integer.parseInt(pcs.getStartRangeExpr()); j <= Integer.parseInt(pcs.getEndRangeExpr()); j++) {
+                                                pnml.println("\t\t\t\t\t\t\t<useroperator declaration=\"" + pcs.getIntervalPrefix() + j + "\"/>");
+                                            }
+                                        else {
+                                            for (int j = 0; j < pcs.getNumColors(); j++)
+                                                pnml.println("\t\t\t\t\t\t\t<useroperator declaration=\"" + pcs.getColorName(j) + "\"/>");
+                                        }
+                                        pnml.println("\t\t\t\t\t\t</partitionelement>");
+                                    }
+                                    pnml.println("\t\t\t\t\t</partition>"); //static subclass declaration
+
+                                }
+
                             }
                         }
                         else { // Product color class
@@ -180,8 +207,9 @@ public class PNMLFormat {
                                         escapeXml(cc.getColorClassName(i))+"\"/>");
                             }
                             pnml.println("\t\t\t\t\t\t</productsort>");
+                            pnml.println("\t\t\t\t\t</namedsort>");
+
                         }
-                        pnml.println("\t\t\t\t\t</namedsort>");
                     }
                 }
                 // Color variables

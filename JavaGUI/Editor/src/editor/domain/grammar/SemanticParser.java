@@ -487,6 +487,7 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
         new BinaryFunct(false, ExprLangParser.LESS_EQ, "<lessthanorequal><subterm>","</subterm><subterm>","</subterm></lessthanorequal>", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.GREATER, "<greaterthan><subterm>","</subterm><subterm>","</subterm></greaterthan>", OperatorPos.FUNCTION),
         new BinaryFunct(false, ExprLangParser.GREATER_EQ, "<greaterthanorequal><subterm>","</subterm><subterm>","</subterm></greaterthanorequal>", OperatorPos.FUNCTION),
+        new BinaryFunct(false, ExprLangParser.CONTAINS , "<contains><subterm>","</subterm><subterm>","</subterm></contains>", OperatorPos.FUNCTION),
     };
         
     public FormattedFormula formatBinaryFn(int binaryIntFn, FormattedFormula expr0, 
@@ -1400,7 +1401,9 @@ public class SemanticParser extends ExprLangBaseVisitor<FormattedFormula> {
                         altId += "</attribute>\n";
                         break;
                     case PNML:
-                        throw new UnsupportedOperationException("Static subclasses are not supporeted in PNML.");
+                        altId = "<useroperator declaration=\""+id+ "\"/>\n";
+                        break;
+                        //throw new UnsupportedOperationException("Static subclasses are not supporeted in PNML.");
                     default:
                         throw new UnsupportedOperationException();
                 }
