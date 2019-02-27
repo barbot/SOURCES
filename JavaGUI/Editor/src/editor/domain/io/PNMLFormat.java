@@ -269,14 +269,20 @@ public class PNMLFormat {
                         pnml.println("\t\t\t\t</graphics>");
                     }
                     
+
+                    pnml.println("\t\t\t\t<type>");
                     if (plc.isInColorDomain()) {
-                        pnml.println("\t\t\t\t<type>");
                         pnml.println("\t\t\t\t\t<text>"+escapeXml(plc.getColorDomainName())+"</text>");
                         pnml.println("\t\t\t\t\t<structure>");
-                        pnml.println("\t\t\t\t\t\t<usersort declaration=\""+escapeXml(plc.getColorDomainName())+"\"/>");
-                        pnml.println("\t\t\t\t\t</structure>");
-                        pnml.println("\t\t\t\t</type>");
+                        pnml.println("\t\t\t\t\t\t<usersort declaration=\"" + escapeXml(plc.getColorDomainName()) + "\"/>");
+                    }else{
+                        pnml.println("\t\t\t\t\t<text>dot</text>");
+                        pnml.println("\t\t\t\t\t<structure>");
+                        pnml.println("\t\t\t\t\t\t<usersort declaration=\"dot\"/>");
                     }
+                    pnml.println("\t\t\t\t\t</structure>");
+                    pnml.println("\t\t\t\t</type>");
+
 
                     String initMarkText = plc.getInitMarkingEditable().getValue().toString();
                     if (!initMarkText.isEmpty()) {
