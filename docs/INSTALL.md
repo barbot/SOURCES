@@ -32,7 +32,7 @@ sudo apt-get install -y graphviz ghostscript
 ```
 Then download the `.deb` package from the [GreatSPN binary repository](https://datacloud.di.unito.it/index.php/s/MnWgcYamrHdDXZk), and install it using:
 ```
-sudo apt install -y greatspn_3.2_amd64.deb
+sudo apt install -y ./greatspn_3.2_amd64.deb
 ```
 
 On **Fedora** or other RedHat-based distributions, install the following packages:
